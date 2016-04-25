@@ -21,20 +21,7 @@ configure() ->
              ,{vm_stats_scheduler, "VM_STATS_SCHEDULER", [{default, true}, {transform, fun transform_boolean/1}]}
              ,{vm_stats_base_key, "VM_STATS_BASE_KEY", [{default, "erlang.vm"}]}
              ],
-    Config1 = read_app_config(Config),
-    ok = stillir:set_config(dogstatsd, Config1).
-
-read_app_config(Config) ->
-    lists:map(fun ({AppVar, EnvVar, Opts0}) ->
-                      Opts1 = case application:get_env(dogstatsd, AppVar) of
-                                  {ok, Value} ->
-                                      lists:keystore(default, 1, Opts0, {default, Value});
-                                  undefined ->
-                                      Opts0
-                              end,
-                      {AppVar, EnvVar, Opts1}
-              end,
-              Config).
+    ok = stillir:set_config(dogstatsd, Config).
 
 transform_map(String) ->
     CompressedString = re:replace(String, <<" ">>, <<>>, [global]),
